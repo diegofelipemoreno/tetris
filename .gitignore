@@ -1,0 +1,11 @@
+.giti.DS_Store
+.idea
+.sass-cache
+.firebaserc
+.tmp
+.vscode
+.firebase
+.history
+dist/
+node_modules/
+**/.depcache.json
