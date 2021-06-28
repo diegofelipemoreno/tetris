@@ -1,0 +1,387 @@
+@keyframes MoveUpDown {
+  0% {
+    bottom: 0;
+    opacity: 0;
+  }
+  
+  50% {
+    opacity: 1;
+  }
+
+  100% {
+    bottom: 75vh;
+    opacity: 0;
+  }
+}
+
+@keyframes spin { 
+  100% {
+    transform:rotate(360deg); 
+    -webkit-transform: rotate(360deg); 
+  } 
+}
+
+.grid {
+  display: grid;
+  grid-column-gap: 6.67%;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: 40px [start] auto [end-title] 80px [board] 400px [controls] auto [end] 100px;
+  width: 100%;
+}
+
+.main-container {
+  display: flex;
+  align-items: center;
+}
+
+.main-container-start canvas {
+  visibility: hidden;
+}
+
+.header {
+  height: 90px;
+  display: block;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.footer {
+  display: block;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.footer img{
+  height: 100%;
+}
+
+.tetris-board {
+  grid-column: 1/-1;
+  grid-row: board/controls;
+  transform: translate(0, 0);
+  margin: 0 auto;
+  display: block;
+  border: 1px solid #3c76c3;
+  background: linear-gradient(#0000, #000);
+}
+
+.controls-wrapper {
+  grid-column: 1/-1;
+  grid-row: controls/end;
+  width: calc(100% - 80px);
+  transform: translate(35px, 20px);
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-evenly;
+}
+
+.tetris-bk {
+  display: flex;
+  grid-column: 1/-1;
+  grid-row: board/controls;
+  align-items: flex-end;
+  z-index: -1;
+  width: 100%;
+  position: relative;
+}
+
+.tetris-bk-desktop {
+  display: none;
+}
+
+.tetris-bk-mobile {
+  transform: translate(-25vw, 26%);
+  position: absolute;
+  width: calc(100% + 50vw);
+}
+
+body.tetris {
+  background-color: black;
+  position: relative;
+  display: block;
+  margin: 0 auto;
+}
+
+.cta-start-game  {
+  grid-column: 2/4;
+  grid-row: 3;
+  transform: translate(0, 0);
+  position: relative;
+  font-weight: 500;
+  line-height: 1.4;
+  font-family: "FuturaBT-Book","Helvetica Neue",Helvetica,Arial,"Lucida Grande",sans-serif;
+  font-size: 18px;
+  border-radius: 20px;
+  cursor: pointer;
+  padding: 5px 10px;
+  border: 2px solid white;
+  z-index: 9;
+  background-color: transparent;
+  color: white;
+  height: 40px;
+  width: 120px;
+  box-sizing: content-box;
+  letter-spacing: .5px;
+}
+
+.cta-start-game-hide {
+  display: none;
+}
+  
+.cursor img {
+  width: 100%;
+}
+
+.controls-wrapper button {
+  cursor: pointer;
+  pointer-events: all;
+}
+
+.cursor {
+  width: 50%;
+  display: flex;
+  position: relative;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+}
+
+.cursor-horizontal {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  align-items: center;
+  justify-content: space-around;
+}
+
+.cursor button {
+  background-color: black;
+  box-sizing: border-box;
+  border-radius: 20px;
+  padding: 0;
+  margin: 0;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  display: flex;
+  width: 40px;
+  height: 48px;
+}
+
+.cursor-down img {
+  transform: rotate(180deg) translate(1px, 1px);
+  margin: 0;
+  width: 100%;
+}
+
+button.cursor-right  {
+  transform: rotate(90deg);
+}
+
+button.cursor-left  {
+  transform: translate(0, -2px) rotate(-90deg);
+}
+
+button.cursor-next {
+  background-color: black;
+  border-radius: 200px;
+  width: 90px;
+  height: 90px;
+  padding: 0;
+  margin: 10px 5px;
+}
+
+.cursor-next img {
+  margin: 0;
+  width: 100%;
+}
+
+.cursor-next {
+  margin: 0;
+  width: 100%;
+} 
+
+.rocket {
+  grid-row: controls;
+  grid-column: 4/-1;
+  width: 63px;
+  height: 95px;
+  position: relative;
+  transform: translate(0, -115px);
+}
+
+.rocket img {
+  animation: MoveUpDown 18s ease infinite, fadeInAnimation ease 8s;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  animation-fill-mode: forwards;
+}
+
+.satellite {
+  grid-row: board;
+  grid-column: 1;
+  width: 112px;
+  height: 75px;
+  position: relative;
+  transform: translate(-10px, -50px);
+}
+
+.satellite img {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 112px;
+  height: 75px;
+  margin:-60px 0 0 -60px;
+  -webkit-animation:spin 30s linear infinite;
+  -moz-animation:spin 30s linear infinite;
+  animation:spin 30s linear infinite;
+}
+
+.tetris__main-content {
+  font-family: "FuturaBT-Book","Helvetica Neue",Helvetica,Arial,"Lucida Grande",sans-serif;
+  color: white;
+  grid-column: 1/-1;
+  grid-row: start/end-title;
+  margin: 0 40px 40px;
+}
+
+.tetris__main-content--title {
+  font-weight: normal;
+  line-height: 1.1;
+  font-family: "FuturaBT-Book","Helvetica Neue",Helvetica,Arial,"Lucida Grande",sans-serif;
+  font-size: 40px;
+  margin: 0 0 30px 0;
+  font-weight: bold;
+  text-transform: capitalize;
+  display: flex;
+  flex-direction: column;
+}
+
+.tetris__main-content--subtitle {
+  font-weight: normal;
+  line-height: 1.1;
+  font-family: "FuturaBT-Book","Helvetica Neue",Helvetica,Arial,"Lucida Grande",sans-serif;
+  font-size: 20px;
+  font-weight: bold;
+  text-transform: capitalize;
+  font-style: italic;
+}
+
+.tetris__main-content--text {
+  font-weight: normal;
+  line-height: 1.7;
+  font-family: "Helvetica Neue","HelveticaNeue-Light","Helvetica Neue Light",Helvetica,Arial,"Lucida Grande",sans-serif;
+  font-size: 18px;
+  margin: 0 0 10px 0;
+  position: relative;
+}
+
+.tetris__main-content--text a {
+  color: #FFF;
+  font-style: italic;
+  font-weight: bold;
+  display: block;
+  margin: 20px 0 0 0;
+}
+
+@media (min-width: 1140px) {
+  .grid {
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-column-gap: 2.19%;
+    grid-template-rows: [start] 80px [board] auto [controls] 335px [end];
+    margin: 0 auto;
+    max-width: 1280px;
+  }
+
+  .tetris-bk {
+    display: block;
+    grid-column: 1/-1;
+    grid-row: start/end;
+    transform: translate(0, 0);
+  }
+
+  .tetris-bk img {
+    width: 100%;
+  }
+
+  .tetris-bk-desktop {
+    display: block;
+  }
+
+  .tetris-bk-mobile {
+    display: none;
+  }
+  
+  .controls-wrapper {
+    grid-column: 7/10;
+    grid-row: controls/end;
+    position: relative;
+    transform: translate(0, 0);
+    width: 95%;
+  }
+  
+  .tetris-board {
+    background: none;
+    background-color: transparent;
+    grid-column: 4/-1;
+    grid-row: board/controls;
+    transform: translate(5px, -20px);
+    min-height: 385px;
+    min-width: 240px;
+  }
+
+  .tetris__main-content {
+    grid-column: 2/6;
+    grid-row: board/controls;
+    transform: translate(30px, -20px);
+    margin: 0;
+  }
+
+  .satellite {
+    grid-row: 2;
+    grid-column: 6;
+    width: 112px;
+    height: 75px;
+    position: relative;
+    transform: translate(0, -20px);
+  }
+
+  .rocket {
+    grid-row: controls;
+    grid-column: 11;
+    transform: translate(-40px, 60px);
+  }
+
+  .cta-start-game {
+    grid-column: 2/6;
+    grid-row: controls;
+    transform: translate(65px, -120px);
+  }
+
+  .main-container {
+    height: 100vh;
+    padding: 40px 0;
+  }  
+
+  .tetris__main-content--title {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+}
+
+@media (min-width: 2500px) {
+  .cursor button {
+    width: 45px;
+    height: 50px;
+  }
+
+  button.cursor-next {
+    width: 50px;
+    height: 50px;
+  }
+}

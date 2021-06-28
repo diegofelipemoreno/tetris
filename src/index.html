@@ -9,8 +9,57 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="./bundle.css">
 	</head>
-	<body>
-		<canvas id="canvas" class="board"></canvas>
+	<body class="tetris">
+		<div>
+			<img class="header" src="../img/header.png" alt=""/>
+		</div>
+
+		<section class="main-container main-container-start js-main-container">
+			<div class="grid">
+				<div class="tetris__main-content">
+					<h2 class="tetris__main-content--title">
+						My Tetris 
+						<span class="tetris__main-content--subtitle">Personal project</span>
+					</h2>
+					<p class="tetris__main-content--text">
+						Web design for the El Tiempo newspaper special World Cup Brasil
+						2014 desktop and mobile. Graphic design for all the modules and
+						sections for the website.
+						<a href="https://github.com/diegofelipemoreno/tetris" target="_blank">My tetris on Github ></a>
+					</p>
+				</div>
+				<button class="cta-start-game js-cta-start-game">Start Game</button>
+				<canvas class="tetris-board" id="canvas" class="board"></canvas>
+				<div class="controls-wrapper">
+					<div class="cursor">
+						<div class="cursor-horizontal">
+							<button class="cursor-left js-cursor-left" aria-label="left">
+								<img class="cta-arrow" src="../img/cta-arrow.png" alt=""/>
+							</button>
+							<button class="cursor-right js-cursor-right" aria-label="right">
+								<img class="cta-arrow" src="../img/cta-arrow.png" alt=""/>
+							</button>
+						</div>
+						<button class="cursor-down js-cursor-down" aria-label="down">
+							<img class="cta-arrow" src="../img/cta-arrow.png" alt=""/>
+						</button>
+					</div>
+					<button class="cursor-next js-cursor-next" aria-label="next">
+						<img class="cta-next" src="../img/cta-next.png" alt=""/>
+					</button>
+				</div>
+				<div class="tetris-bk">
+					<img class="tetris-bk-desktop" src="../img/tetris-bk.jpg" alt=""/>
+					<img class="tetris-bk-mobile" src="../img/tetris-bk-mobile.jpg" alt=""/>
+				</div>
+				<div class="rocket">
+					<img src="../img/rocket.png" alt=""/>
+				</div>
+				<div class="satellite">
+					<img src="../img/satellite.png" alt=""/>
+				</div>
+			</div>
+		</section>
 		<script src="./bundle.js"></script>
 	</body>
 </html>

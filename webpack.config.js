@@ -1,6 +1,7 @@
 const path = require('path');
 const extract = require('mini-css-extract-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 module.exports = {
     entry: './src/index.js',
@@ -21,22 +22,15 @@ module.exports = {
           }
         },
         {
-          test:/\.(sa|sc|c)ss$/,
+          test: /\.css$/i,
+          use: [MiniCssExtractPlugin.loader, 'css-loader'],
+        },
+        {
+          test: /\.(jpe?g|png|gif|svg)$/i,
           use: [
-            {
-              loader: extract.loader
-            },
-            {
-              loader: 'css-loader'
-            },
-            {
-              loader: 'sass-loader',
-              options: {
-                implementation: require('sass')
-              }
-            }
+            'file-loader?name=[name].[ext]&outputPath=images/' // ,'image-webpack-loader?bypassOnDebug'
           ]
-        }
+        },
     ]
   },
   devServer: {
@@ -49,11 +43,13 @@ module.exports = {
     // open: true
   },
   plugins: [
+    new MiniCssExtractPlugin(),
     new extract({
       filename: 'bundle.css'
     }),
     new CopyWebpackPlugin(
       [
+        {from: 'src/img', to: 'img'},
         {from: 'src/index.html', to: 'index.html'},
       ],
       {ignore: ['README.md', 'LICENSE.md', 'CHANGES.md']}

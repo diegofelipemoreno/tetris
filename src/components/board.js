@@ -1,3 +1,4 @@
+import { CONSTANTS } from '../constants';
 import {requestAnimationUtil} from '../utils';
 
 /**
@@ -52,12 +53,17 @@ export class Board {
     /**
      * @param {number}
      */
-    this.isBoardFilledOnXAxis = false;
+    this.isBoardFilledOnYAxis = false;
 
     /**
      * @private {number}
      */
     this.boardSpeed_ = boardConfig.gameSpeed;
+
+    /**
+     * @private {Object}
+     */
+    this.pixelImg_ = new Image();
   }
 
   /**
@@ -130,9 +136,6 @@ export class Board {
     }
 
     this.rowCompleteIdxs_.forEach((elem, index) => {
-      delete this.matrixSaved_[elem];
-      this.matrixSaved_[index] = [];
-
       for (let col = 0; col < this.canvas_.height; col++) {
         this.matrixSaved_[index][col] = 0;
       }
@@ -176,18 +179,18 @@ export class Board {
       rowEmptyDict.set(rowIndex, this.matrixSaved_[rowIndex]?.every((elem) => elem === 0));
     }
 
-    this.isBoardFilledOnXAxis = [...rowEmptyDict.values()].every((elem) => elem === false);
+    this.isBoardFilledOnYAxis = [...rowEmptyDict.values()].every((elem) => elem === false);
   }
 
   /**
-   * Fills all the matrix.
+   * Fills all the matrix whith dark pixels.
    * @private
    */
   fillMatrix_() {
-    if (!this.isBoardFilledOnXAxis) {
+    if (!this.isBoardFilledOnYAxis) {
       return;
     }
-
+    
     for (let row = 0; row < this.canvas_.width; row++) {
       this.matrix[row] =
         Array.apply(null, Array(this.canvas_.height)).map(Number.prototype.valueOf, 1);
@@ -277,10 +280,7 @@ export class Board {
         const columnValue = row[columnIndex];
 
         if (columnValue) {
-          this.context_.fillRect(columnIndex * pieceSize, rowIndex * pieceSize, pieceSize, pieceSize);
-          this.context_.strokeStyle = '#FFF';
-          this.context_.strokeRect(columnIndex * pieceSize, rowIndex * pieceSize, pieceSize, pieceSize);
-          this.context_.strokeStyle = '#FFF';
+          this.context_.drawImage(this.pixelImg_, columnIndex * pieceSize, rowIndex * pieceSize, pieceSize, pieceSize);
         }
       }
     }
@@ -291,6 +291,8 @@ export class Board {
    * @return {!Object}
    */
   init() {
+    this.pixelImg_.src = CONSTANTS.pixelImage;
+
     this.initMatrix_();
     this.render();
   }
