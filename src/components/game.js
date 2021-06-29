@@ -1,9 +1,9 @@
+
 import {Board} from './board';
 import {Piece} from './piece';
 import {PieceController} from './pieceController';
-import {requestAnimationUtil} from '../utils';
+import {requestAnimationUtil, cancelAllAnimationFrames} from '../utils';
 import {CONSTANTS, EVENTS} from '../constants';
-
 
 /**
  * Game Component.
@@ -27,7 +27,7 @@ export class Game {
     /**
      * @private {!Object}
      */
-    this.board_ = null;
+    this.board_ = new Board(gameConfig);
 
     /**
      * @private {!Object}
@@ -50,9 +50,9 @@ export class Game {
     this.gameSpeed_ = 0;
 
     /**
-     * @private {boolean}
+     * @param {boolean}
      */
-    this.isGameOver_ = false;
+    this.isGameOver = false;
 
     this.getNewPiece_ = this.getNewPiece_.bind(this);
     this.pieceTracker_ = this.pieceTracker_.bind(this);
@@ -98,7 +98,7 @@ export class Game {
    * @private
    */
   getNewPiece_() {
-    if (this.isGameOver_) {
+    if (this.isGameOver) {
       return
     }
 
@@ -115,7 +115,7 @@ export class Game {
     this.pieceController_.wrapNewPiece(this.piece_);
     newPieceCoord = this.piece_.getRandomPieceCoord();
     this.board_.updateMatrix(newPieceCoord);
-    this.isGameOver_ = this.board_.isBoardFilledOnYAxis;
+    this.isGameOver = this.board_.isBoardFilledOnYAxis;
   
     requestAnimationUtil(this.getNewPiece_, this.gameSpeed_);
   }
@@ -174,17 +174,30 @@ export class Game {
   }
 
   /**
+   * Ends the game.
+   */
+  end() {
+    this.isGameOver = true;
+    this.pieceController_ = null;
+    this.piece_ = null;
+    this.pieceController_ = null;
+    this.isNewPieceNeeded_ = false;
+
+    this.board_.resetMatrix();
+    cancelAllAnimationFrames();
+  }
+
+  /**
    * Initializes the component.
    */
   init() {
     const {gameSpeed} = this.gameConfig_;
 
     this.gameSpeed_ = gameSpeed;
-    this.board_ = new Board(this.gameConfig_);
-    this.pieceController_ = new PieceController(this.board_);
-  
+    this.pieceController_ = new PieceController(this.board_); 
     this.board_.init();
     this.pieceController_.init();
+
     this.start();
   }
 }

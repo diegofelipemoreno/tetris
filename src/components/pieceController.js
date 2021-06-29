@@ -1,4 +1,4 @@
-import {EVENTS} from '../constants';
+import {EVENTS, SELECTORS} from '../constants';
 
 /**
  * Piece Controller Component.
@@ -11,9 +11,9 @@ export class PieceController {
    */
   constructor(board) {
     /**
-     * @private {!HTMLElemet}
+     * @private {!HTMLElement}
      */
-    this.document_ = document;
+    this.document_ = document
 
     /**
      * @private {!Object}
@@ -79,6 +79,8 @@ export class PieceController {
    * @private
    */
   rotatePiece_(event) {
+    event.stopPropagation();
+
     const evenTarget = event.target;
     const isNextAction = 
       evenTarget.parentElement.classList.contains(Classname.NEXT) || event.keyCode === 32;
@@ -97,6 +99,8 @@ export class PieceController {
    * @private
    */
    onMouseDown_(event){
+    event.stopPropagation();
+
     this.mouseDownHoldStarter_ = setInterval(() => {
       this.movePieceToRight_(event);
       this.movePieceToLeft_(event);
@@ -109,7 +113,9 @@ export class PieceController {
    * @param {!Event} event
    * @private
    */
-  onMouseUp_() {
+  onMouseUp_(event) {
+    event.stopPropagation();
+
     if (this.mouseDownHoldStarter_) {
       clearInterval(this.mouseDownHoldStarter_);
     }
@@ -121,6 +127,8 @@ export class PieceController {
    * @private
    */
   controlsEventHandler_(event) {
+    event.stopPropagation();
+
     this.movePieceToRight_(event);
     this.movePieceToLeft_(event);
     this.rotatePiece_(event);
@@ -136,6 +144,10 @@ export class PieceController {
     this.document_.addEventListener(EVENTS.MOUSE_DOWN, this.onMouseDown_);
     this.document_.addEventListener(EVENTS.MOUSE_UP,  this.onMouseUp_);
     this.document_.addEventListener(EVENTS.MOUSE_OUT, this.onMouseUp_);
+    this.document_.querySelector(SELECTORS.START_GAME_CTA).addEventListener(EVENTS.KEY_DOWN, (event) => {
+      event.preventDefault();
+      event.stopPropagation();
+    });
   }
 
   /**

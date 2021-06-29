@@ -27,10 +27,18 @@
 						sections for the website.
 						<a href="https://github.com/diegofelipemoreno/tetris" target="_blank">My tetris on Github ></a>
 					</p>
+					<label class="toggle-switch xlarge">
+						<input type="checkbox" class="js-cta-start-game"/>
+						<span>
+							<span>Start Game</span>
+							<span>Exit Game</span>
+						</span>
+						<a></a>
+					</label>
 				</div>
-				<button class="cta-start-game js-cta-start-game">Start Game</button>
+				<div class="score"><span>Lines</span><span class="js-score">0</span></div>
 				<canvas class="tetris-board" id="canvas" class="board"></canvas>
-				<div class="controls-wrapper">
+				<div class="controls-wrapper js-controls">
 					<div class="cursor">
 						<div class="cursor-horizontal">
 							<button class="cursor-left js-cursor-left" aria-label="left">
@@ -55,7 +63,7 @@
 				<div class="rocket">
 					<img src="../img/rocket.png" alt=""/>
 				</div>
-				<div class="satellite">
+				<div class="satellite js-satellite">
 					<img src="../img/satellite.png" alt=""/>
 				</div>
 			</div>

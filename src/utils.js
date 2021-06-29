@@ -29,3 +29,14 @@
 
   return window.requestAnimationFrame(visibleStep_);
 };
+
+/**
+ * Cancels all the request animation frame.
+ */
+export const cancelAllAnimationFrames = () => {
+  let id = window.requestAnimationFrame(() => {});
+
+  while(id--) {
+    window.cancelAnimationFrame(id);
+  }
+}

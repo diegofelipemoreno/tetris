@@ -1,5 +1,7 @@
 import { CONSTANTS } from '../constants';
 import {requestAnimationUtil} from '../utils';
+import {Score} from './score.js';
+
 
 /**
  * Board Component.
@@ -34,6 +36,21 @@ export class Board {
      * @private {!Set}
      */
     this.rowCompleteIdxs_ = new Set();
+
+    /**
+     * @private {number}
+     */
+    this.boardSpeed_ = boardConfig.gameSpeed;
+
+    /**
+    * @private {Object}
+    */
+    this.pixelImg_ = new Image();
+
+    /**
+     * @private {Score}
+     */
+    this.score_ = null;
     
     /**
      * @param {number}
@@ -54,16 +71,6 @@ export class Board {
      * @param {number}
      */
     this.isBoardFilledOnYAxis = false;
-
-    /**
-     * @private {number}
-     */
-    this.boardSpeed_ = boardConfig.gameSpeed;
-
-    /**
-     * @private {Object}
-     */
-    this.pixelImg_ = new Image();
   }
 
   /**
@@ -183,7 +190,7 @@ export class Board {
   }
 
   /**
-   * Fills all the matrix whith dark pixels.
+   * Fills all the matrix with pixels.
    * @private
    */
   fillMatrix_() {
@@ -197,6 +204,13 @@ export class Board {
     } 
 
     this.matrixSaved_ = this.matrix.map((elem) => [...elem]);
+  }
+
+  /**
+   * Sets the linesCompleted value.
+   */
+  setLinesCompleted_() {
+    this.score_.linesCompleted += this.rowCompleteIdxs_.size;
   }
 
   /**
@@ -261,9 +275,18 @@ export class Board {
     }
 
     this.getLineCompletedIdxs_();
+    this.setLinesCompleted_();
     this.removeLineFromMatrix_();
     this.validateMatrixfilledOnYAxis_();
     this.fillMatrix_();
+    this.render();
+  }
+
+  /**
+   * Resets the matrix.
+   */
+  resetMatrix() {
+    this.initMatrix_();
     this.render();
   }
 
@@ -292,7 +315,9 @@ export class Board {
    */
   init() {
     this.pixelImg_.src = CONSTANTS.pixelImage;
-
+    this.score_ = new Score();
+   
+    this.score_.init();
     this.initMatrix_();
     this.render();
   }

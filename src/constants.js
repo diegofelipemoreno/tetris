@@ -16,3 +16,12 @@ export const CONSTANTS = {
   MOUSE_UP: 'mouseup',
   MOUSE_OUT: 'mouseout'
 };
+
+/**
+ * Selectors.
+ */
+export const SELECTORS = {
+  START_GAME_CTA: '.js-cta-start-game',
+  TETRIS_CONTAINER: '.js-main-container',
+  SATELLITE_ANCHOR: '.js-satellite'
+};
