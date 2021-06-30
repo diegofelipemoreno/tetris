@@ -5,6 +5,8 @@
 .tmp
 .vscode
 .firebase
+.psd
+.ai
 .history
 dist/
 node_modules/

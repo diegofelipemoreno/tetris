@@ -37,7 +37,6 @@ export class Score {
    * Renders the game score on the view.
    */
   render() {
-    console.log(this.linesCompleted_);
     this.scoreSelector_.innerHTML = this.linesCompleted_;
   }
 

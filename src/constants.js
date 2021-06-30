@@ -1,8 +1,7 @@
 export const CONSTANTS = {
   requestAnimationSpeed: 400,
   requestAnimationHighSpeed: 40,
-  pixelImage: '../img/tetris-pixel.jpg',
-  darkPixelImage: '../img/tetris-pixel-dark.jpg'
+  pixelImage: '../images/tetris-pixel.jpg'
 };
 
 /**
@@ -18,10 +17,20 @@ export const CONSTANTS = {
 };
 
 /**
+ * Event codes.
+ */
+ export const EVENT_CODE = {
+  SPACE: 'Space',
+  ARROW_LEFT: 'ArrowLeft',
+  ARROW_RIGHT: 'ArrowRight',
+};
+
+/**
  * Selectors.
  */
 export const SELECTORS = {
   START_GAME_CTA: '.js-cta-start-game',
+  DOWN_CTA: '.js-cursor-down',
   TETRIS_CONTAINER: '.js-main-container',
   SATELLITE_ANCHOR: '.js-satellite'
 };

@@ -1,15 +1,18 @@
-import './css/style.css';
+import './style.css';
 import {CONSTANTS, SELECTORS, EVENTS} from './constants';
 import {Game} from './components/game.js';
-import {requestAnimationUtil} from './utils';
+import {requestAnimationUtil, mobileCheck} from './utils';
 
-const gameConfig = {
-  width: 10,
-  height: 16,
-  pieceSize: 24,
+let gameConfig = {
+  width: 14,
+  height: 22,
+  pieceSize: 18,
   gameSpeed: CONSTANTS.requestAnimationSpeed
 };
 
+if (mobileCheck()) {
+  gameConfig = {...gameConfig, width: 12, height: 21};
+};
 
 /**
  * The Game Facade Component.

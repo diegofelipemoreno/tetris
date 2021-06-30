@@ -1,7 +1,5 @@
 import { CONSTANTS } from '../constants';
 import {requestAnimationUtil} from '../utils';
-import {Score} from './score.js';
-
 
 /**
  * Board Component.
@@ -40,17 +38,17 @@ export class Board {
     /**
      * @private {number}
      */
+    this.linesCompleted_ = 0;
+
+    /**
+     * @private {number}
+     */
     this.boardSpeed_ = boardConfig.gameSpeed;
 
     /**
     * @private {Object}
     */
     this.pixelImg_ = new Image();
-
-    /**
-     * @private {Score}
-     */
-    this.score_ = null;
     
     /**
      * @param {number}
@@ -208,9 +206,17 @@ export class Board {
 
   /**
    * Sets the linesCompleted value.
+   * @private
    */
   setLinesCompleted_() {
-    this.score_.linesCompleted += this.rowCompleteIdxs_.size;
+    this.linesCompleted_ += this.rowCompleteIdxs_.size;
+  }
+
+  /**
+   * Gets the linesCompleted value.
+   */
+  getLinesCompleted() {
+    return this.linesCompleted_;
   }
 
   /**
@@ -296,7 +302,7 @@ export class Board {
   render() {
     const {pieceSize} = this.boardConfig_;
 
-    for (let rowIndex = 0; rowIndex < this.matrix.length; rowIndex++) {
+    for (let rowIndex = 0; rowIndex < this.height; rowIndex++) {
       const row = this.matrix[rowIndex];
 
       for (let columnIndex = 0; columnIndex < this.width; columnIndex++) {
@@ -315,9 +321,7 @@ export class Board {
    */
   init() {
     this.pixelImg_.src = CONSTANTS.pixelImage;
-    this.score_ = new Score();
-   
-    this.score_.init();
+
     this.initMatrix_();
     this.render();
   }

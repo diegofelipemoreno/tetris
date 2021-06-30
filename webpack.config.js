@@ -49,7 +49,7 @@ module.exports = {
     }),
     new CopyWebpackPlugin(
       [
-        {from: 'src/img', to: 'img'},
+        {from: 'src/images', to: 'images'},
         {from: 'src/index.html', to: 'index.html'},
       ],
       {ignore: ['README.md', 'LICENSE.md', 'CHANGES.md']}

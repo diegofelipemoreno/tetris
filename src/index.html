@@ -3,17 +3,13 @@
 	<head>
 		<title>My Tetris</title>
 		<meta charset="utf-8">
-		<meta name="description" content="My Tetris">
-		<meta name="author" content="My Tetris">
+		<meta name="author" content="My Tetris - Personal project">
+		<meta name="description" content="Is not about a sprint deadline. Simply I had fun designing and programming a tetris in Vanilla JS from scratch. I hope you enjoy it, let me know what do you think or what could be improved.">
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
 		<meta name="viewport" content="width=device-width, initial-scale=1">
 		<link rel="stylesheet" href="./bundle.css">
 	</head>
 	<body class="tetris">
-		<div>
-			<img class="header" src="../img/header.png" alt=""/>
-		</div>
-
 		<section class="main-container main-container-start js-main-container">
 			<div class="grid">
 				<div class="tetris__main-content">
@@ -22,10 +18,10 @@
 						<span class="tetris__main-content--subtitle">Personal project</span>
 					</h2>
 					<p class="tetris__main-content--text">
-						Web design for the El Tiempo newspaper special World Cup Brasil
-						2014 desktop and mobile. Graphic design for all the modules and
-						sections for the website.
-						<a href="https://github.com/diegofelipemoreno/tetris" target="_blank">My tetris on Github ></a>
+						Is not about a sprint deadline. Simply I had fun designing and programming a tetris in Vanilla JS from scratch.
+            I hope you enjoy it, let me know what do you think or what could be improved. 
+            You can check the tetris source code.
+						<a href="https://github.com/diegofelipemoreno/tetris" target="_blank">My tetris source code ></a>
 					</p>
 					<label class="toggle-switch xlarge">
 						<input type="checkbox" class="js-cta-start-game"/>
@@ -39,32 +35,30 @@
 				<div class="score"><span>Lines</span><span class="js-score">0</span></div>
 				<canvas class="tetris-board" id="canvas" class="board"></canvas>
 				<div class="controls-wrapper js-controls">
+					<p class="tooltip tooltip--spacebar">Spacebar</p>
+					<p class="tooltip tooltip--cursor">Cursor</p>
 					<div class="cursor">
 						<div class="cursor-horizontal">
 							<button class="cursor-left js-cursor-left" aria-label="left">
-								<img class="cta-arrow" src="../img/cta-arrow.png" alt=""/>
 							</button>
 							<button class="cursor-right js-cursor-right" aria-label="right">
-								<img class="cta-arrow" src="../img/cta-arrow.png" alt=""/>
 							</button>
 						</div>
 						<button class="cursor-down js-cursor-down" aria-label="down">
-							<img class="cta-arrow" src="../img/cta-arrow.png" alt=""/>
 						</button>
 					</div>
 					<button class="cursor-next js-cursor-next" aria-label="next">
-						<img class="cta-next" src="../img/cta-next.png" alt=""/>
 					</button>
 				</div>
 				<div class="tetris-bk">
-					<img class="tetris-bk-desktop" src="../img/tetris-bk.jpg" alt=""/>
-					<img class="tetris-bk-mobile" src="../img/tetris-bk-mobile.jpg" alt=""/>
+					<img class="tetris-bk-desktop" src="../images/tetris-bk.jpg" alt=""/>
+					<img class="tetris-bk-mobile" src="../images/tetris-bk-mobile.jpg" alt=""/>
 				</div>
 				<div class="rocket">
-					<img src="../img/rocket.png" alt=""/>
+					<img src="../images/rocket.png" alt=""/>
 				</div>
 				<div class="satellite js-satellite">
-					<img src="../img/satellite.png" alt=""/>
+					<img src="../images/satellite.png" alt=""/>
 				</div>
 			</div>
 		</section>
