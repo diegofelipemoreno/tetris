@@ -1,4 +1,4 @@
-import {EVENTS, SELECTORS} from '../constants';
+import {EVENTS, SELECTORS, EVENT_CODE, CONSTANTS} from '../constants';
 
 /**
  * Piece Controller Component.
@@ -41,10 +41,40 @@ export class PieceController {
    * @private
    */
   movePieceToRight_(event) {
+    const isArrowRight = event.code === EVENT_CODE.ARROW_RIGHT;
+
+    if (!isArrowRight) {
+      return;
+    }
+
+    this.movePieceToRightByCta_(event);
+  }
+
+  /**
+   * Validates if the click event on a CTA is made by space bar.
+   * @param {!Event} event
+   * @private
+   */
+  isClickBySpaceBar_(event) {
+    return !event.clientX && event.type === 'click';
+  }
+  
+  /**
+   * Moves the piece to the right by call to action.
+   * @param {!Event} event
+   * @private
+   */
+  movePieceToRightByCta_(event) {
+    const isclickBySpaceBar = this.isClickBySpaceBar_(event);
+
+    if (isclickBySpaceBar) {
+      return;
+    }
+
     const {pieceCoord} = this.piece_;
     const evenTarget = event.target;
     const isKeyBoardAction = event.keyCode === 39;
-    const isRightAction = evenTarget.parentElement.classList.contains(Classname.RIGHT) || isKeyBoardAction;
+    const isRightAction = evenTarget.classList.contains(Classname.RIGHT) || isKeyBoardAction;
 
     if (isRightAction) {
       const nextRightPosition = pieceCoord.map((elem) => [elem[0], elem[1] + 1]);
@@ -60,10 +90,31 @@ export class PieceController {
    * @private
    */
   movePieceToLeft_(event) {
+    const isArrowLeft = event.code === EVENT_CODE.ARROW_LEFT;
+
+    if (!isArrowLeft) {
+      return;
+    }
+
+    this.movePieceToLeftByCta_(event);
+  }
+
+  /**
+   * Moves the piece to the left by call to action.
+   * @param {!Event} event
+   * @private
+   */
+  movePieceToLeftByCta_(event) {
+    const isclickBySpaceBar = this.isClickBySpaceBar_(event);
+
+    if (isclickBySpaceBar) {
+      return;
+    }
+
     const {pieceCoord} = this.piece_;
     const evenTarget = event.target;
     const isKeyBoardAction = event.keyCode === 37;
-    const isLeftAction = evenTarget.parentElement.classList.contains(Classname.LEFT) || isKeyBoardAction;
+    const isLeftAction = evenTarget.classList.contains(Classname.LEFT) || isKeyBoardAction;
 
     if (isLeftAction) {
       const nextLeftPosition = pieceCoord.map((elem) => [elem[0], elem[1] - 1]);
@@ -79,11 +130,27 @@ export class PieceController {
    * @private
    */
   rotatePiece_(event) {
-    event.stopPropagation();
+    const isCursorArrows = event.code === EVENT_CODE.ARROW_LEFT ||  event.code === EVENT_CODE.ARROW_RIGHT;
+    const isSpacebar = event.code === EVENT_CODE.SPACE;
 
+    if (isCursorArrows) {
+      return;
+    }
+
+    if (isSpacebar) {
+      this.rotatePieceByCta_(event);
+    }
+  }
+
+  /**
+   * Rotates the piece on the next position by call to action.
+   * @param {!Event} event
+   * @private
+   */
+  rotatePieceByCta_(event) {
     const evenTarget = event.target;
     const isNextAction = 
-      evenTarget.parentElement.classList.contains(Classname.NEXT) || event.keyCode === 32;
+      evenTarget.classList.contains(Classname.NEXT) || event.keyCode === 32;
 
     if (isNextAction) {
       const {nextPiecePosition, newIndexRotation} = this.piece_.getNextPieceRotation();
@@ -99,8 +166,6 @@ export class PieceController {
    * @private
    */
    onMouseDown_(event){
-    event.stopPropagation();
-
     this.mouseDownHoldStarter_ = setInterval(() => {
       this.movePieceToRight_(event);
       this.movePieceToLeft_(event);
@@ -110,12 +175,9 @@ export class PieceController {
 
   /**
    * Callback for mouse up event.
-   * @param {!Event} event
    * @private
    */
-  onMouseUp_(event) {
-    event.stopPropagation();
-
+  onMouseUp_() {
     if (this.mouseDownHoldStarter_) {
       clearInterval(this.mouseDownHoldStarter_);
     }
@@ -127,11 +189,18 @@ export class PieceController {
    * @private
    */
   controlsEventHandler_(event) {
-    event.stopPropagation();
-
+    const eventTarget = event.target; 
+    
+    eventTarget.blur();
+    this.rotatePiece_(event);
     this.movePieceToRight_(event);
     this.movePieceToLeft_(event);
-    this.rotatePiece_(event);
+
+    if (event.type === EVENTS.CLICK) {
+      this.movePieceToRightByCta_(event);
+      this.movePieceToLeftByCta_(event);
+      this.rotatePieceByCta_(event);
+    }
   }
 
   /**
@@ -139,8 +208,8 @@ export class PieceController {
    * @private
    */
   listenEvents_() {
-    this.document_.addEventListener(EVENTS.KEY_DOWN, this.controlsEventHandler_);
     this.document_.addEventListener(EVENTS.CLICK, this.controlsEventHandler_);
+    this.document_.addEventListener(EVENTS.KEY_DOWN, this.controlsEventHandler_);
     this.document_.addEventListener(EVENTS.MOUSE_DOWN, this.onMouseDown_);
     this.document_.addEventListener(EVENTS.MOUSE_UP,  this.onMouseUp_);
     this.document_.addEventListener(EVENTS.MOUSE_OUT, this.onMouseUp_);

@@ -2,8 +2,9 @@
 import {Board} from './board';
 import {Piece} from './piece';
 import {PieceController} from './pieceController';
-import {requestAnimationUtil, cancelAllAnimationFrames} from '../utils';
-import {CONSTANTS, EVENTS} from '../constants';
+import {Score} from './score.js';
+import {requestAnimationUtil, cancelAllAnimationFrames, mobileCheck} from '../utils';
+import {CONSTANTS, EVENTS, SELECTORS, EVENT_CODE} from '../constants';
 
 /**
  * Game Component.
@@ -23,6 +24,11 @@ export class Game {
      * @private {!HTMLElemet}
      */
     this.document_ = document;
+
+    /**
+     * @private {Object}
+     */
+    this.score_ = null;
 
     /**
      * @private {!Object}
@@ -58,6 +64,7 @@ export class Game {
     this.pieceTracker_ = this.pieceTracker_.bind(this);
     this.addHighSpeed_ = this.addHighSpeed_.bind(this);
     this.addDefaultSpeed_ = this.addDefaultSpeed_.bind(this);
+    this.addHighSpeedByClick_ = this.addHighSpeedByClick_.bind(this);
   }
 
   /**
@@ -83,13 +90,16 @@ export class Game {
 
     if (!isPieceMovingDown) {
       this.isNewPieceNeeded_ = true;
+
       this.board_.saveMatrix(pieceCoord);
       this.getNewPiece_();
+      this.setDefaultSpeed_();
   
       return
     }
 
     this.board_.updateMatrix(pieceCoordUpdated);
+    this.score_.linesCompleted = this.board_.getLinesCompleted();
     requestAnimationUtil(this.pieceTracker_, this.gameSpeed_);
   }
 
@@ -126,14 +136,51 @@ export class Game {
    * @private
    */
   addHighSpeed_(event) {
+    const isCursorArrows = event.code === EVENT_CODE.ARROW_LEFT ||  event.code === EVENT_CODE.ARROW_RIGHT;
+    const isSpacebar = event.code === EVENT_CODE.SPACE;
+
+    if (isCursorArrows) {
+      return;
+    }
+
+    if (isSpacebar) {
+      return;
+    }
+
     const evenTarget = event.target;
     const isDownAction =
-      evenTarget.parentElement.classList.contains(Classname.DOWN) || event.keyCode === 40;
+      evenTarget.classList.contains(Classname.DOWN) || event.keyCode === 40;
 
     if (isDownAction) {
       this.gameSpeed_ = CONSTANTS.requestAnimationHighSpeed;
       this.board_.setBoardSpeed(this.gameSpeed_);
     }
+  }
+
+  /**
+   * Adds high speed on the game by click event.
+   * @param {!Event} event
+   * @private
+   */
+  addHighSpeedByClick_(event) {
+    const evenTarget = event.target;
+    const isDownAction = evenTarget?.classList.contains(Classname.DOWN);
+
+    if (isDownAction) {
+      this.gameSpeed_ = CONSTANTS.requestAnimationHighSpeed;
+      this.board_.setBoardSpeed(this.gameSpeed_);
+    }
+  }
+
+  /**
+   * Sets the default speed.
+   * @private
+   */
+  setDefaultSpeed_() {
+    const {gameSpeed} = this.gameConfig_;
+
+    this.gameSpeed_ = gameSpeed;
+    this.board_.setBoardSpeed(this.gameSpeed_);
   }
 
   /**
@@ -144,13 +191,10 @@ export class Game {
   addDefaultSpeed_(event) {
     const evenTarget = event.target;
     const isDownAction =
-    evenTarget.parentElement.classList.contains(Classname.DOWN) || event.keyCode === 40;
+    evenTarget.classList.contains(Classname.DOWN) || event.keyCode === 40;
 
     if (isDownAction) {
-      const {gameSpeed} = this.gameConfig_;
-
-      this.gameSpeed_ = gameSpeed;
-      this.board_.setBoardSpeed(this.gameSpeed_);
+      this.setDefaultSpeed_();
     }
   }
 
@@ -159,6 +203,15 @@ export class Game {
    * @private
    */
   listenEvents_() {
+    const isMobile = mobileCheck();
+
+    if (isMobile) {
+      this.document_.querySelector(
+        SELECTORS.DOWN_CTA).addEventListener(EVENTS.CLICK, this.addHighSpeedByClick_);
+
+        return;
+    }
+
     this.document_.addEventListener(EVENTS.KEY_DOWN, this.addHighSpeed_);
     this.document_.addEventListener(EVENTS.KEY_UP, this.addDefaultSpeed_);
     this.document_.addEventListener(EVENTS.MOUSE_DOWN, this.addHighSpeed_);
@@ -184,6 +237,7 @@ export class Game {
     this.isNewPieceNeeded_ = false;
 
     this.board_.resetMatrix();
+    this.score_.linesCompleted = 0;
     cancelAllAnimationFrames();
   }
 
@@ -192,12 +246,13 @@ export class Game {
    */
   init() {
     const {gameSpeed} = this.gameConfig_;
-
     this.gameSpeed_ = gameSpeed;
-    this.pieceController_ = new PieceController(this.board_); 
-    this.board_.init();
-    this.pieceController_.init();
+    this.score_ = new Score();
+    this.pieceController_ = new PieceController(this.board_);
 
+    this.board_.init();
+    this.pieceController_.init();  
+    this.score_.init();
     this.start();
   }
 }
