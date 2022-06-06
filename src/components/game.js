@@ -4,7 +4,7 @@ import {Piece} from './piece';
 import {PieceController} from './pieceController';
 import {Score} from './score.js';
 import {requestAnimationUtil, cancelAllAnimationFrames, mobileCheck} from '../utils';
-import {CONSTANTS, EVENTS, SELECTORS, EVENT_CODE} from '../constants';
+import {CONSTANTS, EVENTS, SELECTORS} from '../constants';
 
 /**
  * Game Component.
@@ -56,14 +56,29 @@ export class Game {
     this.gameSpeed_ = 0;
 
     /**
+     * @private {number}
+     */
+    this.requestAnimationFrameId_ = -1;
+
+    /**
+     * @private {!Object}
+     */
+    this.keysPressed = {};
+
+    /**
      * @param {boolean}
      */
     this.isGameOver = false;
 
+    /**
+     * @param {number}
+     */
+    this.pieceMovingXAxisCounter_ = 0;
+
     this.getNewPiece_ = this.getNewPiece_.bind(this);
     this.pieceTracker_ = this.pieceTracker_.bind(this);
-    this.addHighSpeed_ = this.addHighSpeed_.bind(this);
-    this.addDefaultSpeed_ = this.addDefaultSpeed_.bind(this);
+    this.manageHighSpeed_ = this.manageHighSpeed_.bind(this);
+    this.manageDefaultSpeed_ = this.manageDefaultSpeed_.bind(this);
     this.addHighSpeedByClick_ = this.addHighSpeedByClick_.bind(this);
   }
 
@@ -80,12 +95,46 @@ export class Game {
   }
 
   /**
+   * Validates the piece X axis advance when any cursor key keeps pressed.
+   * @param {Array<Array<number>>} pieceCoord The actual piece coordinates,
+   * @private
+   * @return {Array<Array<number>>}
+   */
+  pieceAdvanceYAxis_(pieceCoord) {
+    if (this.keysPressed['ArrowDown']) {
+      this.setHightSpeed_();
+      return pieceCoord;
+    }
+
+    const {gameSpeed} = this.gameConfig_;
+
+    // TODO This magic number should removed.
+    if (!(this.pieceMovingXAxisCounter_ % (gameSpeed * 3))) {
+      this.pieceMovingXAxisCounter_ = 0;
+
+      return pieceCoord;
+    }
+
+    if (this.keysPressed['ArrowLeft'] || this.keysPressed['ArrowRight']) {
+      for (let pieceIdx = 0; pieceIdx < pieceCoord.length; pieceIdx++) {
+        pieceCoord[pieceIdx][0] = pieceCoord[pieceIdx][0] - 1;
+      }
+    }
+
+    return pieceCoord;
+  }
+
+  /**
    * Watches the piece's track.
    * @private
    */
   pieceTracker_() {
+    if (!this.piece_) {
+      return
+    }
+
     const {pieceCoord} = this.piece_;
-    const pieceCoordUpdated = this.piece_.render(0, 1);
+    let pieceCoordUpdated = this.piece_.render(0, 1);
     const isPieceMovingDown = this.validatePiecePath_();
 
     if (!isPieceMovingDown) {
@@ -94,13 +143,18 @@ export class Game {
       this.board_.saveMatrix(pieceCoord);
       this.getNewPiece_();
       this.setDefaultSpeed_();
-  
       return
+    }
+
+    if (this.isKeyKeepPressed_()) {
+      pieceCoordUpdated = this.pieceAdvanceYAxis_([...pieceCoordUpdated]);
     }
 
     this.board_.updateMatrix(pieceCoordUpdated);
     this.score_.linesCompleted = this.board_.getLinesCompleted();
-    requestAnimationUtil(this.pieceTracker_, this.gameSpeed_);
+    this.requestAnimationFrameId_ =
+      requestAnimationUtil(this.pieceTracker_,  this.gameSpeed_);
+    this.actualTime_ = Date.now();
   }
 
   /**
@@ -120,40 +174,39 @@ export class Game {
 
     let newPieceCoord = [];
 
-    this.isNewPieceNeeded_ = false; 
+    this.isNewPieceNeeded_ = false;
     this.piece_ = new Piece(this.gameConfig_);
     this.pieceController_.wrapNewPiece(this.piece_);
     newPieceCoord = this.piece_.getRandomPieceCoord();
     this.board_.updateMatrix(newPieceCoord);
     this.isGameOver = this.board_.isBoardFilledOnYAxis;
-  
+
     requestAnimationUtil(this.getNewPiece_, this.gameSpeed_);
   }
 
   /**
-   * Adds high speed on the game.
+   * Checks if the cursor keys are pressed,
+   * @private
+   * @return {boolean}
+   */
+  isKeyKeepPressed_() {
+    return this.keysPressed['ArrowDown'] || this.keysPressed['ArrowLeft']  || this.keysPressed['ArrowRight'];
+  }
+
+  /**
+   * Manages the speed on the game.
    * @param {!Event} event
    * @private
    */
-  addHighSpeed_(event) {
-    const isCursorArrows = event.code === EVENT_CODE.ARROW_LEFT ||  event.code === EVENT_CODE.ARROW_RIGHT;
-    const isSpacebar = event.code === EVENT_CODE.SPACE;
+  manageHighSpeed_(event) {
+    this.keysPressed[event.code] = true;
 
-    if (isCursorArrows) {
-      return;
-    }
-
-    if (isSpacebar) {
-      return;
-    }
-
-    const evenTarget = event.target;
-    const isDownAction =
-      evenTarget.classList.contains(Classname.DOWN) || event.keyCode === 40;
-
-    if (isDownAction) {
-      this.gameSpeed_ = CONSTANTS.requestAnimationHighSpeed;
-      this.board_.setBoardSpeed(this.gameSpeed_);
+    if (this.isKeyKeepPressed_()) {
+      this.pieceMovingXAxisCounter_ += 100;
+      this.setHightSpeed_();
+    } else {
+      this.pieceMovingXAxisCounter_ = 0;
+      this.setDefaultSpeed_();
     }
   }
 
@@ -167,9 +220,18 @@ export class Game {
     const isDownAction = evenTarget?.classList.contains(Classname.DOWN);
 
     if (isDownAction) {
-      this.gameSpeed_ = CONSTANTS.requestAnimationHighSpeed;
-      this.board_.setBoardSpeed(this.gameSpeed_);
+      this.setHightSpeed_();
     }
+  }
+
+  /**
+   * Sets the hight speed.
+   * @private
+   */
+  setHightSpeed_() {
+    this.gameSpeed_ = CONSTANTS.requestAnimationHighSpeed;
+
+    this.board_.setBoardSpeed(this.gameSpeed_);
   }
 
   /**
@@ -188,14 +250,13 @@ export class Game {
    * @param {!Event} event
    * @private
    */
-  addDefaultSpeed_(event) {
-    const evenTarget = event.target;
-    const isDownAction =
-    evenTarget.classList.contains(Classname.DOWN) || event.keyCode === 40;
-
-    if (isDownAction) {
-      this.setDefaultSpeed_();
+  manageDefaultSpeed_(event) {
+    if (event.code === 'Space') {
+      this.pieceMovingXAxisCounter_ = 0;
     }
+
+    delete this.keysPressed[event.key];
+    this.setDefaultSpeed_();
   }
 
   /**
@@ -205,17 +266,17 @@ export class Game {
   listenEvents_() {
     const isMobile = mobileCheck();
 
-    if (isMobile) {
-      this.document_.querySelector(
-        SELECTORS.DOWN_CTA).addEventListener(EVENTS.CLICK, this.addHighSpeedByClick_);
+    this.document_.querySelector(
+      SELECTORS.DOWN_CTA).addEventListener(EVENTS.CLICK, this.addHighSpeedByClick_);
 
+    if (isMobile) {
         return;
     }
 
-    this.document_.addEventListener(EVENTS.KEY_DOWN, this.addHighSpeed_);
-    this.document_.addEventListener(EVENTS.KEY_UP, this.addDefaultSpeed_);
-    this.document_.addEventListener(EVENTS.MOUSE_DOWN, this.addHighSpeed_);
-    this.document_.addEventListener(EVENTS.MOUSE_UP, this.addDefaultSpeed_);
+    this.document_.addEventListener(EVENTS.KEY_DOWN, this.manageHighSpeed_);
+    this.document_.addEventListener(EVENTS.KEY_UP, this.manageDefaultSpeed_);
+    this.document_.addEventListener(EVENTS.MOUSE_DOWN, this.manageHighSpeed_);
+    this.document_.addEventListener(EVENTS.MOUSE_UP, this.manageDefaultSpeed_);
   }
 
   /**
@@ -235,10 +296,10 @@ export class Game {
     this.piece_ = null;
     this.pieceController_ = null;
     this.isNewPieceNeeded_ = false;
-
-    this.board_.resetMatrix();
     this.score_.linesCompleted = 0;
-    cancelAllAnimationFrames();
+    this.board_.resetMatrix();
+
+    cancelAllAnimationFrames(this.requestAnimationFrameId_);
   }
 
   /**
@@ -251,7 +312,7 @@ export class Game {
     this.pieceController_ = new PieceController(this.board_);
 
     this.board_.init();
-    this.pieceController_.init();  
+    this.pieceController_.init();
     this.score_.init();
     this.start();
   }
