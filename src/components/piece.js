@@ -55,7 +55,7 @@ export class Piece {
     const xCoorSet = new Set();
 
     Array.from(pieceCoord, (elem) => xCoorSet.add(elem[1]));
-    
+
     return xCoorSet.size;
   }
 
@@ -75,11 +75,11 @@ export class Piece {
     const maxYpos = currentPieceMaxCoord.yPos;
     const minXpos = Math.min(...pieceMaxCoordDict.x);
     const minYpos = Math.min(...pieceMaxCoordDict.y);
-    
+
     return {
-      xPos: Math.round((minXpos + maxXpos) / 2) -1,
-      yPos: Math.round((minYpos + maxYpos) / 2) -1,
-    }
+      xPos: Math.round((minXpos + maxXpos) / 2) - 1,
+      yPos: Math.round((minYpos + maxYpos) / 2) - 1
+    };
   }
 
   /**
@@ -87,8 +87,8 @@ export class Piece {
    * @param {!Array<Array<number>>} newPieceCoord The new piece coordinates.
    * @param {number} indexRotationPiece The piece index rotation.
    */
-   setPieceRotationCoord(newPieceCoord, indexRotationPiece) {
-    this.pieceTypeData.rotationIndex = indexRotationPiece;  
+  setPieceRotationCoord(newPieceCoord, indexRotationPiece) {
+    this.pieceTypeData.rotationIndex = indexRotationPiece;
     this.pieceCoord = newPieceCoord;
   }
 
@@ -121,8 +121,8 @@ export class Piece {
    * Gets the new piece rotation position.
    * @return {!Object}
    */
-   getNextPieceRotation() {
-    const {type, rotationIndex} = this.pieceTypeData; 
+  getNextPieceRotation() {
+    const {type, rotationIndex} = this.pieceTypeData;
     const pieceRotationList = piecesModel[type];
     const currentPieceCoord = this.getPieceCurrentPosition_();
     const {xPos, yPos} = currentPieceCoord;
@@ -135,9 +135,10 @@ export class Piece {
     }
 
     return {
-      nextPiecePosition: nextRotationCoord.map((elem) => [elem[0] + yPos, elem[1] + xPos]),
-      newIndexRotation,
-    }
+      nextPiecePosition: nextRotationCoord.map(
+        (elem) => [elem[0] + yPos, elem[1] + xPos]),
+      newIndexRotation
+    };
   }
 
   /**
@@ -155,7 +156,7 @@ export class Piece {
     return {
       xPos: Math.max(...pieceCoordDict.x),
       yPos: Math.max(...pieceCoordDict.y)
-    }
+    };
   }
 
   /**
@@ -186,7 +187,7 @@ export class Piece {
     const pieceCoord = piecesModel[pieceType][rotationIndex];
     let xCoorRandom = 0;
 
-    this.pieceWidth  = this.getPieceWidth_(pieceCoord);
+    this.pieceWidth = this.getPieceWidth_(pieceCoord);
     this.pieceHeight = this.getPieceHeight_(pieceCoord);
     this.pieceTypeData = {type: pieceType, rotationIndex};
     xCoorRandom = this.getPieceValidXpos_();
@@ -200,6 +201,7 @@ export class Piece {
    * Renders a piece with new Coordinates according the parameter x/y position.
    * @param {number} x The x coordinate.
    * @param {number} y The y coordinate.
+   * @return {!Array<!Array<number>>}
    */
   render(x, y) {
     x = x || 0;
