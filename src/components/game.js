@@ -75,6 +75,16 @@ export class Game {
      */
     this.pieceMovingXAxisCounter_ = 0;
 
+    /**
+     * @param {number}
+     */
+     this.lastKeyUpAt = 0;
+
+    /**
+     * @param {boolean}
+     */
+    this.isKeyLongPressed = false;
+
     this.getNewPiece_ = this.getNewPiece_.bind(this);
     this.pieceTracker_ = this.pieceTracker_.bind(this);
     this.manageHighSpeed_ = this.manageHighSpeed_.bind(this);
@@ -101,21 +111,19 @@ export class Game {
    * @return {Array<Array<number>>}
    */
   pieceAdvanceYAxis_(pieceCoord) {
-    if (this.keysPressed['ArrowDown']) {
-      this.setHightSpeed_();
+    if (this.keysPressed['ArrowDown']) {  
       return pieceCoord;
     }
 
-    const {gameSpeed} = this.gameConfig_;
-
-    // TODO This magic number should removed.
-    if (!(this.pieceMovingXAxisCounter_ % (gameSpeed * 3))) {
+    if (!this.isKeyLongPressed) {
       this.pieceMovingXAxisCounter_ = 0;
+    }  
 
-      return pieceCoord;
-    }
+    this.pieceMovingXAxisCounter_ += 100;
+    const counterLimit = 1200;
+    const delayMoveOnY = this.pieceMovingXAxisCounter_ % counterLimit;
 
-    if (this.keysPressed['ArrowLeft'] || this.keysPressed['ArrowRight']) {
+    if (delayMoveOnY) {
       for (let pieceIdx = 0; pieceIdx < pieceCoord.length; pieceIdx++) {
         pieceCoord[pieceIdx][0] = pieceCoord[pieceIdx][0] - 1;
       }
@@ -200,12 +208,19 @@ export class Game {
    */
   manageHighSpeed_(event) {
     this.keysPressed[event.code] = true;
+    var keyDownAt = new Date();
 
-    if (this.isKeyKeepPressed_()) {
-      this.pieceMovingXAxisCounter_ += 100;
+    setTimeout(() => {
+      if (+keyDownAt > +this.lastKeyUpAt) {
+        this.isKeyLongPressed = true;
+      } else {
+        this.isKeyLongPressed = false;
+      }
+    }, 400);
+
+    if (this.isKeyLongPressed && this.isKeyKeepPressed_()) {
       this.setHightSpeed_();
     } else {
-      this.pieceMovingXAxisCounter_ = 0;
       this.setDefaultSpeed_();
     }
   }
@@ -251,6 +266,8 @@ export class Game {
    * @private
    */
   manageDefaultSpeed_(event) {
+    this.lastKeyUpAt = new Date();
+
     if (event.code === 'Space') {
       this.pieceMovingXAxisCounter_ = 0;
     }
