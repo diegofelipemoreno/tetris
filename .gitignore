@@ -5,9 +5,12 @@
 .tmp
 .vscode
 .firebase
-.psd
-.ai
 .history
+*.jpg
+*.png
+**/*.ai
+**/*.psd
+**/*.mov
 dist/
 node_modules/
 **/.depcache.json

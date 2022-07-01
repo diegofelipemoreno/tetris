@@ -2,12 +2,13 @@ const path = require('path');
 const extract = require('mini-css-extract-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
     entry: './src/index.js',
     output: {
       path: path.resolve(__dirname, 'dist'),
-      filename: 'bundle.js'
+      filename: '[name].bundle.js',
     },
     module: {
       rules: [
@@ -43,9 +44,11 @@ module.exports = {
     // open: true
   },
   plugins: [
-    new MiniCssExtractPlugin(),
+    new MiniCssExtractPlugin({
+      filename: '[name].css'
+    }),
     new extract({
-      filename: 'bundle.css'
+      filename: '[name].css'
     }),
     new CopyWebpackPlugin(
       [
@@ -54,6 +57,15 @@ module.exports = {
       ],
       {ignore: ['README.md', 'LICENSE.md', 'CHANGES.md']}
     ),
+    new HtmlWebpackPlugin({
+      title: 'My Tetris',
+      filename: 'index.html',
+      minify: {
+        collapseWhitespace: true,
+        removeScriptTypeAttributes: true
+      },
+      template: './src/index.html',
+    }),
   ],
   mode: 'development'
 }
