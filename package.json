@@ -2,7 +2,7 @@
   "name": "tetris",
   "version": "1.0.0",
   "description": "Tetris game in JS",
-  "main": "index.js",
+  "main": "dist/libpack.js",
   "scripts": {
     "start": "webpack --config webpack.config.js && webpack-dev-server --watch",
     "prod": "npm run clean && webpack --config webpack.config.js && webpack -p",

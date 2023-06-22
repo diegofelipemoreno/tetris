@@ -48,5 +48,6 @@ export const SELECTORS = {
   DOWN_CTA: '.js-cursor-down',
   TETRIS_CONTAINER: '.js-main-container',
   NEXT_CTA: '.js-cursor-next',
-  SATELLITE_ANCHOR: '.js-satellite'
+  CANVAS: '.js-tetris-board',
+  SATELLITE: '.js-satellite'
 };

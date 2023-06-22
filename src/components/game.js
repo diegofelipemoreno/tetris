@@ -207,8 +207,9 @@ export class Game {
    * @private
    */
   manageHighSpeed_(event) {
+    const keyDownAt = new Date();
+  
     this.keysPressed[event.code] = true;
-    var keyDownAt = new Date();
 
     setTimeout(() => {
       if (+keyDownAt > +this.lastKeyUpAt) {

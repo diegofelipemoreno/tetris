@@ -166,7 +166,7 @@ body.scroll-disabled {
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
-  background-image: url('./images/cta-arrow.png');
+  background-image: url(images/cta-arrow.png);
   transform: rotate(180deg) translate(1px, 1px);
 }
 
@@ -174,7 +174,7 @@ button.tetris-cursor-right  {
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
-  background-image: url('./images/cta-arrow.png');
+  background-image: url(images/cta-arrow.png);
   transform: rotate(90deg);
 }
 
@@ -182,7 +182,7 @@ button.tetris-cursor-left  {
   background-size: contain;
   background-position: center;
   background-repeat: no-repeat;
-  background-image: url('./images/cta-arrow.png');
+  background-image: url(images/cta-arrow.png);
   transform: translate(0, -2px) rotate(-90deg);
 }
 
@@ -190,7 +190,7 @@ button.tetris-cursor-next {
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
-  background-image: url('./images/cta-next.png');
+  background-image: url(images/cta-next.png);
   background-color: black;
   border-radius: 200px;
   width: 90px;
@@ -250,7 +250,7 @@ button.tetris-cursor-next {
   background-size: contain;
   background-position: bottom;
   background-repeat: no-repeat;
-  background-image: url('./images/tetris-bk-mobile2.jpg');
+  background-image: url(images/tetris-bk-mobile2.jpg);
   position: relative;
   z-index: 2;
 }
@@ -677,3 +677,4 @@ button.tetris-cursor-next {
     height: 60px;
   }
 }
+

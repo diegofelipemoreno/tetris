@@ -10,8 +10,8 @@
 		<link rel="stylesheet" href="./bundle.css">
 	</head>
 	<body class="tetris">
-		<section class="main-container main-container-start js-main-container">
-			<div class="grid">
+		<section class="tetris-main-container tetris-main-container-start js-main-container">
+			<div class="tetris-grid">
 				<div class="tetris__main-content">
 					<h2 class="tetris__main-content--title">
 						My Tetris 
@@ -32,34 +32,32 @@
 						<a></a>
 					</label>
 				</div>
-				<div class="score"><span>Lines</span><span class="js-score">0</span></div>
-				<canvas class="tetris-board" id="canvas" class="board"></canvas>
-				<div class="controls-wrapper js-controls">
-					<p class="tooltip tooltip--spacebar">Spacebar</p>
-					<p class="tooltip tooltip--cursor">Cursor</p>
-					<div class="cursor">
-						<div class="cursor-horizontal">
-							<button class="cursor-left js-cursor-left" aria-label="left">
+				<div class="tetris-score"><span>Lines</span><span class="js-score">0</span></div>
+				<canvas class="tetris-board js-tetris-board" id="canvas" class="board"></canvas>
+				<div class="tetris-controls-wrapper js-controls">
+					<p class="tetris-tooltip tetris-tooltip--spacebar">Spacebar</p>
+					<p class="tetris-tooltip tetris-tooltip--cursor">Cursor</p>
+					<div class="tetris-cursor">
+						<div class="tetris-cursor-horizontal">
+							<button class="tetris-cursor-left js-cursor-left" aria-label="left">
 							</button>
-							<button class="cursor-right js-cursor-right" aria-label="right">
+							<button class="tetris-cursor-right js-cursor-right" aria-label="right">
 							</button>
 						</div>
-						<button class="cursor-down js-cursor-down" aria-label="down">
+						<button class="tetris-cursor-down js-cursor-down" aria-label="down">
 						</button>
 					</div>
-					<button class="cursor-next js-cursor-next" aria-label="next">
+					<button class="tetris-cursor-next js-cursor-next" aria-label="next">
 					</button>
 				</div>
 				<div class="tetris-bk">
 					<img class="tetris-bk-desktop" src="../images/tetris-bk.jpg" alt=""/>
 					<img class="tetris-bk-mobile" src="../images/tetris-bk-mobile.jpg" alt=""/>
 				</div>
-				<div class="rocket">
+				<div class="tetris-rocket">
 					<img src="../images/rocket.png" alt=""/>
 				</div>
-				<div class="satellite js-satellite">
-					<img src="../images/satellite.png" alt=""/>
-				</div>
+				<img  class="tetris-satellite js-satellite" src="../images/satellite.png" alt=""/>
 			</div>
 		</section>
 		<script src="./bundle.js"></script>

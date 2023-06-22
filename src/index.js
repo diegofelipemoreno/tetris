@@ -18,7 +18,7 @@ if (mobileCheck()) {
  * The Game Facade Component.
  * Manages the Tetris visibility, start, end actions.
  */
-class GameFacade {
+export class GameFacade {
   /**
    * Creates the Game Facade Component.
    */
@@ -61,7 +61,11 @@ class GameFacade {
     const startCta = event.target;
     const isChecked = startCta.checked;
 
-    this.document_.querySelector(SELECTORS.SATELLITE_ANCHOR).scrollIntoView();
+    if (mobileCheck()) {
+      this.document_.querySelector(SELECTORS.SATELLITE)?.scrollIntoView();
+    } else {
+      this.body_.scrollIntoView();
+    }
     
     isChecked ? this.startGame_() : this.endGame_(); 
    }
@@ -98,7 +102,7 @@ class GameFacade {
   }
 
   /**
-   * Watchs the game is over status.
+   * Watches the game is over status.
    * @private
    */
   watchGameStatus_() {
@@ -119,17 +123,18 @@ class GameFacade {
     this.tetrisContainer_ = this.document_.querySelector(SELECTORS.TETRIS_CONTAINER);
     this.startGameCheckbox_ = this.document_.querySelector(SELECTORS.START_GAME_CTA);
 
-    this.listenEvents_();
+    if (this.startGameCheckbox_) {
+      this.listenEvents_();
+    }
   }
 }
+
+new GameFacade().init();
 
 /**
  * Classname.
  */
  const Classname = {
   SCROLL_DISABLED: 'scroll-disabled',
-  GAME_ACTIVE: 'main-container-start'
+  GAME_ACTIVE: 'tetris-main-container-start'
 };
-
-
-new GameFacade().init();
