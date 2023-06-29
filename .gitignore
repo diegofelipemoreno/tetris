@@ -7,7 +7,9 @@
 .firebase
 .history
 **/*.ai
+*.ai
 **/*.psd
 **/*.mov
 node_modules/
 **/.depcache.json
+.DS_Store

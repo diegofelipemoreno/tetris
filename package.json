@@ -1,5 +1,5 @@
 {
-  "name": "tetris",
+  "name": "@diegofelipemoreno/tetris",
   "version": "1.0.0",
   "description": "Tetris game in JS",
   "main": "dist/libpack.js",
