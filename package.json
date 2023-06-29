@@ -1,6 +1,6 @@
 {
   "name": "@diegofelipemoreno/tetris",
-  "version": "1.0.0",
+  "version": "1.0.2",
   "description": "Tetris game in JS",
   "main": "dist/libpack.js",
   "scripts": {

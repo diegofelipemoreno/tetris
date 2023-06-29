@@ -32,12 +32,12 @@
 
 /**
  * Cancels all the request animation frame.
+ * @param {!number} requestID Callback.The ID value returned by the call to
+ * window.requestAnimationFrame() that requested the callback.
  */
-export const cancelAllAnimationFrames = () => {
-  let id = window.requestAnimationFrame(() => {});
-
-  while(id--) {
-    window.cancelAnimationFrame(id);
+export const cancelAllAnimationFrames = (requestID) => {
+  while(requestID--) {
+    window.cancelAnimationFrame(requestID);
   }
 }
 

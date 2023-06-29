@@ -129,7 +129,7 @@ export class GameFacade {
   }
 }
 
-new GameFacade().init();
+//new GameFacade().init();
 
 /**
  * Classname.
