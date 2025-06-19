@@ -3,6 +3,7 @@
 .sass-cache
 .firebaserc
 .tmp
+.npmrc
 .vscode
 .firebase
 .history

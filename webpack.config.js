@@ -1,64 +1,67 @@
 const path = require('path');
-const extract = require('mini-css-extract-plugin');
-const CopyWebpackPlugin = require('copy-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
 module.exports = {
-    entry: './src/index.js',
-    output: {
-      path: path.resolve(__dirname, 'dist'),
-      filename: 'libpack.js',
-      library: 'libpack',
-      libraryTarget:'umd'
-    },
-    module: {
-      rules: [
-        {
-          test: /\.js$/,
-          exclude: /(node_modules)/,
-          use: {
-            loader: 'babel-loader',
+  entry: './src/index.js',
+  output: {
+    path: path.resolve(__dirname, 'dist'),
+    filename: 'libpack.js',
+    library: 'libpack',
+    libraryTarget: 'umd'
+  },
+  module: {
+    rules: [
+      {
+        test: /\.js$/,
+        exclude: /(node_modules)/,
+        use: {
+          loader: 'babel-loader',
+          options: {
+            presets: ['@babel/preset-env']
+          }
+        }
+      },
+      {
+        test: /\.css$/i,
+        use: [MiniCssExtractPlugin.loader, 'css-loader']
+      },
+      {
+        test: /\.(jpe?g|png|gif|svg)$/i,
+        use: [
+          {
+            loader: 'file-loader',
             options: {
-                presets: ['@babel/preset-env']
+              name: '[name].[ext]',
+              outputPath: 'images/'
             }
           }
-        },
-        {
-          test: /\.css$/i,
-          use: [MiniCssExtractPlugin.loader, 'css-loader'],
-        },
-        {
-          test: /\.(jpe?g|png|gif|svg)$/i,
-          use: [
-            'file-loader?name=[name].[ext]&outputPath=images/' // ,'image-webpack-loader?bypassOnDebug'
-          ]
-        },
+        ]
+      }
     ]
   },
   devServer: {
-    contentBase: path.join(__dirname, 'dist'),
+    static: {
+      directory: path.join(__dirname, 'dist')
+    },
     port: 3000,
     compress: true,
-    hot: true, // Enable Hot Module Replacement on the server
-    stats: 'errors-only',
-    historyApiFallback: true
-    // open: true
+    hot: true,
+    historyApiFallback: true,
+    devMiddleware: {
+      stats: 'errors-only'
+    }
   },
   plugins: [
     new MiniCssExtractPlugin({
       filename: '[name].css'
     }),
-    new extract({
-      filename: '[name].css'
+    new CopyWebpackPlugin({
+      patterns: [
+        { from: 'src/images', to: 'images' }
+      ]
     }),
-    new CopyWebpackPlugin(
-      [
-        {from: 'src/images', to: 'images'},
-        {from: 'src/index.html', to: 'index.html'},
-      ],
-      {ignore: ['README.md', 'LICENSE.md', 'CHANGES.md']}
-    ),
     new HtmlWebpackPlugin({
       title: 'My Tetris',
       filename: 'index.html',
@@ -66,8 +69,8 @@ module.exports = {
         collapseWhitespace: true,
         removeScriptTypeAttributes: true
       },
-      template: './src/index.html',
-    }),
+      template: './src/index.html'
+    })
   ],
   mode: 'development'
-}
+};
